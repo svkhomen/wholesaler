@@ -37,10 +37,8 @@ import de.htwg_konstanz.ebus.framework.wholesaler.api.bo.BOSupplier;
 
 public class Import {
 	
-	/**
-	 * import xml into db
-	 * @param request  Http Request
-	 * @param errorList User Notification
+	/*
+	  import xml into db
 	 */
 	
 	public void uploadXML(HttpServletRequest request, ArrayList<String> errorList) {
@@ -67,11 +65,11 @@ public class Import {
 		}
 	}
 	
-	/**
-	 * uploads file and gets input stream from the file
-	 * @param request HttpServletRequest
-	 * @param errorList user notification
-	 * @return inputStream from upload
+	/*
+	  uploads file and gets input stream from the file
+	  @param request HttpServletRequest
+	  @param errorList user notification
+	  @return inputStream from upload
 	 */
 	private InputStream getFile(HttpServletRequest request, ArrayList<String> errorList) {
 		//Factory and Servlet for FileUpload
@@ -103,20 +101,20 @@ public class Import {
 		return uploadFile;
 	}
 	
-	/**
-	 * Create DOM from InputStream
-	 * @param inputStream the uploaded imputStream
-	 * @param errorList user notification
-	 * @return the BMECAT document. null on error.
+	/*
+	  Create DOM from InputStream
+	  @param inputStream the uploaded imputStream
+	  @param errorList user notification
+	  @return the BMECAT document or an error.
 	 */
-	private Document createDOM(InputStream uploadFile,
-			ArrayList<String> errorList) {
+	private Document createDOM(InputStream uploadFile, ArrayList<String> errorList) {
 		System.out.println("Create DOM from InputStream.....");
 		Document document = null;
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		dbf.setNamespaceAware(true);
 		dbf.setIgnoringElementContentWhitespace(true);
 		try {
+			System.out.println("try DOM");
 			DocumentBuilder parser = dbf.newDocumentBuilder();
 			document = parser.parse(uploadFile);
 			System.out.println("DOM created");
@@ -134,11 +132,10 @@ public class Import {
 
 	}
 	
-	/**
-	 * validates DOM against bmecat xsd
-	 * @param document
-	 * @param errorList
-	 * @return true or false
+	/*
+	  validates DOM according to scheme bmecat xsd
+
+	  @return if valid - true, if not -  false
 	 */
 	
 	public boolean validate(Document document, ArrayList<String> errorList) {
@@ -162,11 +159,11 @@ public class Import {
 		return isValid;
 	}
 	
-	/**
-	 * gets the Supplier from db or null if supplier not found
-	 * @param document the DOM
-	 * @param errorList user notification
-	 * @return corresponding supplier from db, if not found -> null
+	/*
+	 checks if supplier exists
+	 @param document the DOM
+	 @param errorList user notification
+	 @return corresponding supplier from db, if not found -> null
 	 */
 	private BOSupplier checkSupplier(Document document, ArrayList<String> errorList) {
 		//get suppliers in document

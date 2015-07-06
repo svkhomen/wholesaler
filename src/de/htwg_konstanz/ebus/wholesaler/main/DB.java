@@ -21,16 +21,17 @@ import de.htwg_konstanz.ebus.framework.wholesaler.vo.Country;
 
 public class DB {
 	
-	/**
-	 * inserts the Products from the uploaded catalog into the DB
-	 * @param document the BMECAT document
-	 * @param errorList for User notification
-	 * @param supplier the supplier of the product
-	 * @return product which has been inserted
+	/*
+	  makes the operations with the DB:
+	  inserts products
+	  @param document the BMECAT document
+	  @param errorList for User notification
+	  @param supplier the supplier of the product
+	  @return product which has been inserted
 	 */
 	public BOProduct insertProductsIntoDB(Document document, List<String> errorList, BOSupplier supplier){
 		System.out.println("insert Products Into DB.......");
-		//Get all Articles from the uploaded catalog
+		//Get all articles from the uploaded catalog by tagname
 		NodeList articleList = document.getElementsByTagName("ARTICLE");
 		BOProduct product = null;
 		int countAdded = 0;
@@ -44,7 +45,7 @@ public class DB {
 			//get "SUPPLIER_AID" (Artikelnummer) and set the value for product
 			NodeList supplier_aid = article.getElementsByTagName("SUPPLIER_AID");
 			
-			//supplier_aid has been changed in order to differ between supplierOrderNumber and customerOrderNumber and to ensure offering same products from different customers
+			//supplier_aid has been changed in order to differ between supplierOrderNumber and customerOrderNumber
 			product.setOrderNumberSupplier("son" + supplier.getSupplierNumber() + supplier_aid.item(0).getChildNodes().item(0).getNodeValue()); 
 			product.setOrderNumberCustomer("con" + supplier.getSupplierNumber() + supplier_aid.item(0).getChildNodes().item(0).getNodeValue());
 	
@@ -85,15 +86,13 @@ public class DB {
 			}
 		}	 
 		errorList.add("INFO: Summary: "+countUpdated+ " products updated, "+countAdded+" added");	
-		//always do a commit -> commits and closes transaction
+		//commits and closes this transaction
 		_BaseBOA.getInstance().commit();
 		return product;	
 	}
 	
-	/**
-	 * checks if xml tag exists
-	 * @param nodes
-	 * @return true or false
+	/*
+	  checks if xml tag exists
 	 */
 	private boolean tagExists(NodeList nodes){
 		if(nodes.getLength()>0){
@@ -108,14 +107,17 @@ public class DB {
 		return false;
 	}
 	
+	/*
+	  makes the operations with the DB: inserts prices
+	 */
 	
 	private void insertPrices(Element article, BOProduct bp) {
 		NodeList articlePrices = article.getElementsByTagName("ARTICLE_PRICE");
 		BOSalesPrice salesPrice = new BOSalesPrice();
 		BOPurchasePrice boPrice = new BOPurchasePrice();
 		
-		// Get Price Amount and get if exist Pirce_Type and Tax otherwise set Default like the other parameters (Counter, LowerBoundScaledPrice)
-		// Ugly: SaveOrUpdate-Method overrides multiple prices for the same Product...
+		// Get Price Amount and get if exist Price_Type and Tax otherwise set Default for this parameter
+
 		for (int i = 0; i < articlePrices.getLength(); i++) {
 			Element articlePriceElement = (Element) articlePrices.item(i);
 			NodeList articlePriceAmountList = articlePriceElement.getElementsByTagName("PRICE_AMOUNT");
@@ -134,8 +136,8 @@ public class DB {
 				tax = BigDecimal.valueOf(Double.valueOf(0.1900));
 			}
 			salesPrice.setProduct(bp);
-			// The Profit margin is twice as high 
-			salesPrice.setAmount(pAmount.multiply(new BigDecimal(2)));
+			// The Profit margin is 2,5
+			salesPrice.setAmount(pAmount.multiply(new BigDecimal(2.5)));
 			salesPrice.setPricetype(priceType);
 			salesPrice.setTaxrate(tax);
 			salesPrice.setCountry(new BOCountry(new Country("DE")));
@@ -151,9 +153,9 @@ public class DB {
 		}
 	}
 	
-	/**
-	 * Deletes a product from the DB 
-	 * @param product the product to be deleted
+	/*
+	  Deletes products from the DB 
+	  @param product the product to be deleted
 	 */
 	public void deleteProduct(BOProduct product){
 		ProductBOA.getInstance().delete(product);

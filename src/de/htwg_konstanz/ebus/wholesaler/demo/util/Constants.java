@@ -9,7 +9,10 @@ public class Constants
 	public static final String IMPORT = "import";
 	public static final String IMPORT_XMLFILE = "xmlFile";
 	
-	public static final String EXPORT = "export";
+	public static final String ACTION_EXPORT = "export";
+	public static final String ACTION_UPDATE = "update";
+	
+
 
 	public static final String ACTION_SHOW_ORDER_CUSTOMER_REQUEST_XML = "showOrderCustomerRequestXml";
 	public static final String ACTION_SHOW_ORDER_CUSTOMER_RESPONSE_XML = "showOrderCustomerResponseXml";

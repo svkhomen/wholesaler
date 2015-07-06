@@ -25,9 +25,10 @@
 			}	
 		}
 	</script>
-	<h1>IMPORT - Import Product Catalog</h1>
+	<h1>Import: Import Product Catalog</h1>
 	<form id="upload" name="upload" action="controllerservlet?action=import" enctype="multipart/form-data" method="POST">
 		<label>Please, select your file:</label>
+		<br>
 		<br>
 		<input type="file" name="xmlFile" id="xmlFile"/>
 <!-- 		<br> -->
